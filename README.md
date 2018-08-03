@@ -84,3 +84,40 @@ Usually indicates the existance of unusual characters not normally found in scie
 
 * ParsedName.**state**: Indicates if the full name has been parsed
 
+* ParsedName.**getTerminalEpithet()**: returns the terminal epithet. Infraspecific epithet if existing, the species epithet or null
+
+* ParsedName.**hasName()**: return `True` if the parsed name has non null name properties or a scientific name. Remarks will not count as a name
+
+* ParsedName.**hasAuthorship()**: return `True` if any kind of authorship exists
+
+* ParsedName.**isBinomial()**: return `True` if the name is a bi- or trinomial with at least a genus and species epithet given.
+
+* ParsedName.**isTrinomial()**: return true if the name is a trinomial with at least a genus, species and infraspecific epithet given.
+
+* ParsedName.**isIndetermined()**: Checks if a parsed name is missing final epithets compared to what is indicated by its rank.
+Returns `True` if the name is not fully determined.
+
+* ParsedName.**isIncomplete()**: returns `True` if some "higher" epithet of a name is missing, e.g. the genus in case of a species.
+
+* ParsedName.**isAbbreviated()**: returns `True` if the name contains an abbreviated genus or uninomial.
+
+* ParsedName.**canonicalName()**: A full scientific name with authorship from the individual properties in its canonical form.
+Autonyms are rendered without authorship and subspecies are using the subsp rank marker
+unless a name is assigned to the zoological code.
+
+* ParsedName.**canonicalName()**: A full scientific name just as canonicalName, but without any authorship.
+
+* ParsedName.**canonicalComplete()**: Assembles a full name with all details including non code compliant, informal remarks.
+
+* ParsedName.**nameMinimal()**:  returns a minimal canonical name with nothing else but the 3 main name parts (genus, species, infraspecific).
+No rank or hybrid markers and no authorship, cultivar or strain information is rendered.
+Infrageneric names are represented without a leading genus.
+Unicode characters will be replaced by their matching ASCII characters.
+For example:
+    * Abies alba
+    * Abies alba alpina
+    * Bracteata
+
+* ParsedName.**authorshipComplete()**: returns the full concatenated authorship for parsed names including the sanctioning author.
+
+

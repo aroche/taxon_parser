@@ -20,7 +20,7 @@ def canonical(n):
 
 def canonicalWithoutAuthorship(n):
     """
-        A full scientific name just as canonicalName, but without any authorship.
+    A full scientific name just as canonicalName, but without any authorship.
     """
     return buildName(n, True, True, False, True, False, True, False, True, False, False, False, True, True)
 
@@ -34,9 +34,9 @@ def canonicalMinimal(n):
         Unicode characters will be replaced by their matching ASCII characters.
 
         For example:
-        Abies alba
-        Abies alba alpina
-        Bracteata
+            Abies alba
+            Abies alba alpina
+            Bracteata
     """
     return buildName(n,False, False, False, False, False, True, True, False, False, False, False, False, False)
 
@@ -58,6 +58,7 @@ def authorshipComplete(n):
         return None
     return sb
 
+
 def authorString(authors, inclYear):
     """
         Renders the authors of an authorship including ex authors, optionally with the year included.
@@ -67,28 +68,29 @@ def authorString(authors, inclYear):
         return
     return sb
 
+
 def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, infrageneric, decomposition, asciiOnly,
     showIndet, nomNote, remarks, showSensu, showCultivar, showStrain):
     """
         build a name controlling all available flags for name parts to be included in the resulting name.
         
-        :param hybridMarker:    include the hybrid marker with the name if existing
-        :param rankMarker:      include the infraspecific or infrageneric rank marker with the name if existing
-        :param authorship:      include the names authorship (authorteam and year)
-        :param genusForinfrageneric: show the genus for infrageneric names
-        :param infrageneric:    include the infrageneric name in brackets for species or infraspecies
-        :param decomposition:   decompose unicode ligatures into their corresponding ascii ones, e.g. æ beomes ae
-        :param asciiOnly:       transform unicode letters into their corresponding ascii ones, e.g. ø beomes o and ü u
-        :param showIndet:       if True include the rank marker for incomplete determinations, for example Puma spec.
-        :param nomNote:         include nomenclatural notes
-        :param remarks:         include informal remarks
+        :param hybridMarker    include the hybrid marker with the name if existing
+        :param rankMarker      include the infraspecific or infrageneric rank marker with the name if existing
+        :param authorship      include the names authorship (authorteam and year)
+        :param genusForinfrageneric show the genus for infrageneric names
+        :param infrageneric    include the infrageneric name in brackets for species or infraspecies
+        :param decomposition   decompose unicode ligatures into their corresponding ascii ones, e.g. æ beomes ae
+        :param asciiOnly       transform unicode letters into their corresponding ascii ones, e.g. ø beomes o and ü u
+        :param showIndet       if True include the rank marker for incomplete determinations, for example Puma spec.
+        :param nomNote         include nomenclatural notes
+        :param remarks         include informal remarks
     """
-    
     sb = ''
 
     if n.isCandidatus():
         sb += "\"Candidatus "
     
+
     if n.uninomial is not None:
         # higher rank names being just a uninomial!
         if hybridMarker and NamePart.GENERIC == n.getNotho():
@@ -164,7 +166,8 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
                     # no infraspecific epitheton given, but rank below species. Indetermined!
                     sb += ' '  + n.rank.marker
                     authorship = False;
-    
+        
+
             else:
                 # infraspecific part
                 sb += appendInfraspecific(n, hybridMarker, rankMarker, False)
@@ -266,14 +269,14 @@ def isInfraspecificMarker(r):
 
 def appendRankMarker(rank, nothoPrefix):
     """
-        return True if rank marker was added
+        :return True if rank marker was added
     """
     return appendRankMarker(rank, null, nothoPrefix)
 
 
 def appendRankMarker(rank, ifRank, nothoPrefix):
     """
-        return True if rank marker was added
+        :return True if rank marker was added
     """
     sb = ''
     if rank is not None and rank.marker is not None and (ifRank is None or ifRank.test(rank)):
@@ -283,7 +286,7 @@ def appendRankMarker(rank, ifRank, nothoPrefix):
         sb += rank.marker
         return sb
     
-    return False
+    return False;
 
 
 def appendGenus(n, hybridMarker):
@@ -308,6 +311,7 @@ def joinAuthors(authors, useEtAl=True):
 def appendAuthorshipFromAuthor(auth, includeYear):
     """
         Renders the authorship with ex authors and year
+        :param sb StringBuilder to append to
     """
     sb = ''
     if auth.exists():
