@@ -121,48 +121,49 @@ class TaxonParser:
     # common 3 char or longer name suffices
     AUTHOR_TOKEN_3 = "fil|filius|hort|jun|junior|sen|senior"
     # common name suffices (ms=manuscript, not yet published)
-    AUTHOR_TOKEN = "(?:\\p{Lu}[\\p{Lu}\\p{Ll}'-]*" + \
-        "|" + AUTHOR_TOKEN_3 + \
-        "|al|f|j|jr|ms|sr|v|v[ao]n|bis|d[aeiou]?|de[nrmls]?|degli|e|l[ae]s?|s|ter|'?t|y" + \
-        ")\\.?"
+    AUTHOR_TOKEN = (r"(?:\p{Lu}[\p{Lu}\p{Ll}'-]*" 
+        + "|" + AUTHOR_TOKEN_3 
+        + "|al|f|j|jr|ms|sr|v|v[ao]n|bis|d[aeiou]?|de[nrmls]?|degli|e|l[ae]s?|s|ter|'?t|y" 
+        + r")\.?")
     AUTHOR = AUTHOR_TOKEN + "(?:[ '-]?" + AUTHOR_TOKEN + ")*"
     AUTHOR_TEAM = AUTHOR + "(?:[&,;]+" + AUTHOR + ")*"
-    AUTHORSHIP = \
-        "(?:(" + AUTHOR_TEAM + ") ?\\bex[. ])?" + \
-        "(" + AUTHOR_TEAM + ")" + \
-        "(?: *: *(Pers\\.?|Fr\\.?))?" # 2 well known sanction authors for fungus, see POR-2454
+    AUTHORSHIP = (
+        "(?:(" + AUTHOR_TEAM + r") ?\bex[. ])?" 
+        + "(" + AUTHOR_TEAM + ")" 
+        + r"(?: *: *(Pers\.?|Fr\.?))?"  # 2 well known sanction authors for fungus, see POR-2454
+    ) 
     AUTHOR_TEAM_PATTERN = re.compile("^" + AUTHOR_TEAM + "$")
     YEAR = "[12][0-9][0-9][0-9?]"
-    YEAR_LOOSE = YEAR + "[abcdh?]?(?:[/,-][0-9]{1,4})?"
+    YEAR_LOOSE = YEAR + r"[abcdh?]?(?:[/,-][0-9]{1,4})?"
 
     NOTHO = "notho"
-    RANK_MARKER = ("(?:" + NOTHO + ")?(?:(?<!f[ .])sp|" +
-            "|".join(rankutils.RANK_MARKER_MAP_INFRASPECIFIC.keys()) +
-        ")").replace("|hort|", "|hort(?!\\.ex)|") # avoid hort.ex matches
+    RANK_MARKER = ("(?:" + NOTHO + ")?(?:(?<!f[ .])sp|"
+            + "|".join(rankutils.RANK_MARKER_MAP_INFRASPECIFIC.keys())
+            + ")").replace("|hort|", "|hort(?!\\.ex)|") # avoid hort.ex matches
 
-    RANK_MARKER_MICROBIAL = "(?:bv\\.|ct\\.|f\\.sp\\.|" + \
-            "|".join(r.name.replace("\\.", "\\\\.")
+    RANK_MARKER_MICROBIAL = r"(?:bv\.|ct\.|f\.sp\.|" \
+           + "|".join(r.name.replace(r"\.", r"\\.")
                 for r in rankutils.INFRASUBSPECIFIC_MICROBIAL_RANKS) +  ")"
 
     UNALLOWED_EPITHET_ENDING = "bacilliform|coliform|coryneform|cytoform|chemoform|biovar|serovar" \
                                + "|genomovar|agamovar|cultivar|genotype|serotype|subtype|ribotype|isolate"
     EPHITHET = ("(?:[0-9]+-?|[a-z]-|[doml]'|(?:van|novae) [a-z])?" 
-                + "(?!"+RANK_MARKER+"\\b)"  # avoid matching to rank markers
+                + "(?!" + RANK_MARKER + r"\b)"  # avoid matching to rank markers
                 + "[" + name_letters + "+-]{1,}(?<! d)[" + name_letters + "]" 
-                + "(?<!(?:\\b(?:ex|l[ae]|v[ao]n|"+AUTHOR_TOKEN_3+")\\.?|"  # avoid epithets ending with the unallowed endings, e.g. serovar and author suffices like filius
-                + UNALLOWED_EPITHET_ENDING +"))(?=\\b)")
-    MONOMIAL = "[" + NAME_LETTERS + "](?:\\.|[" + name_letters  \
+                + r"(?<!(?:\b(?:ex|l[ae]|v[ao]n|" + AUTHOR_TOKEN_3 + ")\\.?|"  # avoid epithets ending with the unallowed endings, e.g. serovar and author suffices like filius
+                + UNALLOWED_EPITHET_ENDING + "))(?=\\b)")
+    MONOMIAL = "[" + NAME_LETTERS + r"](?:\.|[" + name_letters  \
         + "]+)(?:-[" + NAME_LETTERS + "]?[" + name_letters + "]+)?"
     # a pattern matching typical latin word endings. Helps identify name parts from authors
     LATIN_ENDINGS = Latin_endings_pattern().pattern
-    INFRAGENERIC = "(?:\\(([" + NAME_LETTERS + "][" + name_letters + "-]+)\\)" + \
-            "| ((?:" + NOTHO + ")?(?:" + \
-            "|".join(rankutils.RANK_MARKER_MAP_INFRAGENERIC.keys()) + \
-            "))[. ]([" + NAME_LETTERS + "][" + name_letters + "-]+)" \
-        + ")"
+    INFRAGENERIC = (r"(?:\(([" + NAME_LETTERS + "][" + name_letters + r"-]+)\)" 
+            + "| ((?:" + NOTHO + ")?(?:" 
+            + "|".join(rankutils.RANK_MARKER_MAP_INFRAGENERIC.keys())
+            + "))[. ]([" + NAME_LETTERS + "][" + name_letters + "-]+)"
+        + ")")
 
-    RANK_MARKER_ALL = "(" + NOTHO + ")? *(" + \
-        "|".join(rankutils.RANK_MARKER_MAP.keys()) + ")\\.?"
+    RANK_MARKER_ALL = "(" + NOTHO + ")? *(" \
+        + "|".join(rankutils.RANK_MARKER_MAP.keys()) + r")\.?"
     RANK_MARKER_ONLY = re.compile("^" + RANK_MARKER_ALL + "$")
 
     QUOTES = ('"', '\'', '"', '\'')
@@ -171,145 +172,145 @@ class TaxonParser:
     HYBRID_MARKER = "×"
     HYBRID_FORMULA_PATTERN = re.compile("[. ]" + HYBRID_MARKER + " ")
     EXTINCT_MARKER = "†"
-    EXTINCT_PATTERN = re.compile(EXTINCT_MARKER + "\\s*")
+    EXTINCT_PATTERN = re.compile(EXTINCT_MARKER + r"\s*")
 
     CULTIVAR = re.compile("(?:([. ])cv[. ])?[\"'] ?((?:[" + NAME_LETTERS + "]?[" + name_letters + "]+[- ]?){1,3}) ?[\"']")
-    CULTIVAR_GROUP = re.compile("(?<!^)\\b[\"']?((?:[" + NAME_LETTERS + "][" + name_letters + "]{2,}[- ]?){1,3})[\"']? (Group|Hybrids|Sort|[Gg]rex|gx)\\b")
+    CULTIVAR_GROUP = re.compile(r"(?<!^)\b[\"']?((?:[" + NAME_LETTERS + "][" + name_letters + r"]{2,}[- ]?){1,3})[\"']? (Group|Hybrids|Sort|[Gg]rex|gx)\b")
 
     # TODO: replace with more generic manuscript name parsing: https://github.com/gbif/name-parser/issues/8
-    INFRASPEC_UPPER = re.compile("(?<=forma? )([A-Z])\\b")
-    STRAIN = re.compile("([a-z]\\.?) +([A-Z]+[ -]?(?!"+YEAR+")[0-9]+T?)$")
+    INFRASPEC_UPPER = re.compile(r"(?<=forma? )([A-Z])\b")
+    STRAIN = re.compile(r"([a-z]\.?) +([A-Z]+[ -]?(?!" + YEAR + ")[0-9]+T?)$")
     # this is only used to detect whether we have a virus name
-    IS_VIRUS_PATTERN = re.compile("virus(es)?\\b|" + \
-        "\\b(" + \
-            "(bacterio|viro)?phage(in|s)?|" + \
-            "particles?|" + \
-            "prion|" + \
-            "replicon|" + \
-            "(alpha|beta|circular) ?satellites|" + \
-            "[a-z]+satellite|" + \
-            "vector|" + \
-            "viroid|" + \
-            "ictv$" + \
-        ")\\b", re.I)
+    IS_VIRUS_PATTERN = re.compile(r"virus(es)?\b|" 
+        + r"\b("
+          +  "(bacterio|viro)?phage(in|s)?|"
+           +  "particles?|" 
+            + "prion|" 
+            + "replicon|" 
+            + "(alpha|beta|circular) ?satellites|" 
+            + "[a-z]+satellite|" 
+            + "vector|"
+            + "viroid|"
+            + "ictv$"
+        + r")\b", re.I)
     # NPV=Nuclear Polyhedrosis Virus
     # GV=Granulovirus
-    IS_VIRUS_PATTERN_CASE_SENSITIVE = re.compile("\\b(:?[MS]?NP|G)V\\b")
-    IS_VIRUS_PATTERN_POSTFAIL = re.compile("(\\b(vector)\\b)", re.I)
+    IS_VIRUS_PATTERN_CASE_SENSITIVE = re.compile(r"\b(:?[MS]?NP|G)V\b")
+    IS_VIRUS_PATTERN_POSTFAIL = re.compile(r"(\b(vector)\b)", re.I)
     # RNA or other gene markers
-    IS_GENE = re.compile("(RNA|DNA)[0-9]*(?:\\b|_)")
+    IS_GENE = re.compile(r"(RNA|DNA)[0-9]*(?:\b|_)")
     # detect known OTU name formats
     # SH  = SH000003.07FU
     # BIN = BOLD:AAA0003
-    OTU_PATTERN = re.compile("(BOLD:[0-9A-Z]{7}$|SH[0-9]{6}\\.[0-9]{2}FU)", re.I)
+    OTU_PATTERN = re.compile(r"(BOLD:[0-9A-Z]{7}$|SH[0-9]{6}\.[0-9]{2}FU)", re.I)
     # spots a Candidatus bacterial name
-    CANDIDATUS = "(Candidatus\\s|Ca\\.)"
+    CANDIDATUS = r"(Candidatus\s|Ca\.)"
     IS_CANDIDATUS_PATTERN = re.compile(CANDIDATUS)
     IS_CANDIDATUS_QUOTE_PATTERN = re.compile("\"" + CANDIDATUS + "(.+)\"", re.I)
-    FAMILY_PREFIX = re.compile("^[A-Z][a-z]*(?:aceae|idae) +(" + \
-            "|".join(rankutils.RANK_MARKER_MAP_FAMILY_GROUP.keys()) + \
-        ")\\b")
+    FAMILY_PREFIX = re.compile("^[A-Z][a-z]*(?:aceae|idae) +("
+            + "|".join(rankutils.RANK_MARKER_MAP_FAMILY_GROUP.keys())
+        + r")\b")
     SUPRA_RANK_PREFIX = re.compile("^(" + "|".join(rankutils.merge_dicts(
             rankutils.RANK_MARKER_MAP_SUPRAGENERIC,
-            rankutils.RANK_MARKER_MAP_INFRAGENERIC).keys()) + ")[\\. ] *")
+            rankutils.RANK_MARKER_MAP_INFRAGENERIC).keys()) + r")[\. ] *")
     RANK_MARKER_AT_END = re.compile("[ .]"
         + RANK_MARKER_ALL[:RANK_MARKER_ALL.rfind(')')]
         + "|"
         + RANK_MARKER_MICROBIAL[3:]
-        + "[. ]?(?:Ad|Lv)?\\.?" # allow for larva/adult life stage indicators: http://dev.gbif.org/issues/browse/POR-3000
+        + r"[. ]?(?:Ad|Lv)?\.?" # allow for larva/adult life stage indicators: http://dev.gbif.org/issues/browse/POR-3000
         + "$")
-    FILIUS_AT_END = re.compile("[ .]f\\.?$")
+    FILIUS_AT_END = re.compile(r"[ .]f\.?$")
     # name normalising
-    EXTRACT_SENSU = re.compile(" ?\\b" \
-        + "(" \
-            + "(?:(?:excl[. ](?:gen|sp|var)|mut.char|p.p)[. ])?" \
-            + "\\(?(?:" \
-            + "ss?[. ](?:(?:ampl|l|s|str)[. ]|(?:ampl|lat|strict)(?:[uo]|issimo)?)" \
-            + "|(?:(?:ss[. ])?auct|emend|fide|non|nec|sec|sensu|according to)[. ].+" \
-            + ")\\)?" \
+    EXTRACT_SENSU = re.compile(" ?\\b" 
+        + "(" 
+            + "(?:(?:excl[. ](?:gen|sp|var)|mut.char|p.p)[. ])?" 
+            + r"\(?(?:" 
+            + "ss?[. ](?:(?:ampl|l|s|str)[. ]|(?:ampl|lat|strict)(?:[uo]|issimo)?)" 
+            + "|(?:(?:ss[. ])?auct|emend|fide|non|nec|sec|sensu|according to)[. ].+" 
+            + r")\)?" 
         + ")")
-    NOV_RANKS = "((?:[sS]ub)?(?:[fF]am|[gG]en|[sS]s?p(?:ec)?|[vV]ar|[fF](?:orma?)?))"
+    NOV_RANKS = r"((?:[sS]ub)?(?:[fF]am|[gG]en|[sS]s?p(?:ec)?|[vV]ar|[fF](?:orma?)?))"
     NOV_RANK_MARKER = re.compile("(" + NOV_RANKS + ")")
-    EXTRACT_NOMSTATUS = re.compile("[;, ]?" \
-        + "\\(?" \
-        + "\\b(" \
-            + "(?:comb|"+NOV_RANKS+")[. ]nov\\b[. ]?(?:ined[. ])?" \
-            + "|ined[. ]" \
-            + "|nom(?:en)?[. ]" \
-            + "(?:utiq(?:ue)?[. ])?" \
-            + "(?:ambig|alter|alt|correct|cons|dubium|dub|herb|illeg|invalid|inval|negatum|neg|novum|nov|nudum|nud|oblitum|obl|praeoccup|prov|prot|transf|superfl|super|rejic|rej)\\b[. ]?" \
-            + "(?:prop[. ]|proposed\\b)?" \
-        + ")" \
-        + "\\)?")
-    EXTRACT_REMARKS = re.compile("\\s+(anon\\.?)(\\s.+)?$")
-    COMMA_AFTER_BASYEAR = re.compile("(" + YEAR + ")\\s*\\)\\s*,")
+    EXTRACT_NOMSTATUS = re.compile("[;, ]?" 
+        + r"\(?" 
+        + r"\b(" 
+            + "(?:comb|" + NOV_RANKS + r")[. ]nov\b[. ]?(?:ined[. ])?" 
+            + "|ined[. ]" 
+            + "|nom(?:en)?[. ]" 
+            + "(?:utiq(?:ue)?[. ])?" 
+            + r"(?:ambig|alter|alt|correct|cons|dubium|dub|herb|illeg|invalid|inval|negatum|neg|novum|nov|nudum|nud|oblitum|obl|praeoccup|prov|prot|transf|superfl|super|rejic|rej)\b[. ]?"
+            + r"(?:prop[. ]|proposed\b)?"
+        + ")"
+        + r"\)?")
+    EXTRACT_REMARKS = re.compile(r"\s+(anon\.?)(\s.+)?$")
+    COMMA_AFTER_BASYEAR = re.compile("(" + YEAR + r")\s*\)\s*,")
     NORM_APOSTROPHES = re.compile("([\u0060\u00B4\u2018\u2019]+)")
     NORM_QUOTES = re.compile("([\"'`´]+)")
     REPL_GENUS_QUOTE = re.compile("^' *(" + MONOMIAL + ") *'")
-    REPL_ENCLOSING_QUOTE = re.compile("^[',\\s]+|[',\\s]+$")
-    NORM_UPPERCASE_WORDS = re.compile("\\b(\\p{Lu})(\\p{Lu}{2,})\\b")
+    REPL_ENCLOSING_QUOTE = re.compile(r"^[',\s]+|[',\s]+$")
+    NORM_UPPERCASE_WORDS = re.compile(r"\b(\p{Lu})(\p{Lu}{2,})\b")
     NORM_LOWERCASE_BINOMIAL = re.compile("^(" + EPHITHET + ") (" + EPHITHET + ")")
-    NORM_WHITESPACE = re.compile("(?:\\\\[nr]|\\s)+")
+    NORM_WHITESPACE = re.compile(r"(?:\\[nr]|\s)+")
     REPL_UNDERSCORE = re.compile("_+")
-    NORM_NO_SQUARE_BRACKETS = re.compile("\\[(.*?)\\]")
-    NORM_BRACKETS_OPEN = re.compile("\\s*([{(\\[])\\s*,?\\s*")
-    NORM_BRACKETS_CLOSE = re.compile("\\s*,?\\s*([})\\]])\\s*")
-    NORM_BRACKETS_OPEN_STRONG = re.compile("( ?[{\\[] ?)+")
-    NORM_BRACKETS_CLOSE_STRONG = re.compile("( ?[}\\]] ?)+")
-    NORM_AND = re.compile("\\b *(and|et|und|\\+|,&) *\\b")
+    NORM_NO_SQUARE_BRACKETS = re.compile(r"\[(.*?)\]")
+    NORM_BRACKETS_OPEN = re.compile(r"\s*([{(\[])\s*,?\s*")
+    NORM_BRACKETS_CLOSE = re.compile(r"\s*,?\s*([})\]])\s*")
+    NORM_BRACKETS_OPEN_STRONG = re.compile(r"( ?[{\[] ?)+")
+    NORM_BRACKETS_CLOSE_STRONG = re.compile(r"( ?[}\]] ?)+")
+    NORM_AND = re.compile(r"\b *(and|et|und|\+|,&) *\b")
     NORM_SUBGENUS = re.compile("(" + MONOMIAL + ") (" + MONOMIAL + ") (" + EPHITHET+ ")")
-    NO_Q_MARKS = re.compile("([" + author_letters + "])\\?+")
-    NORM_PUNCTUATIONS = re.compile("\\s*([.,;:&(){}\\[\\]-])\\s*\\1*\\s*")
-    NORM_YEAR = re.compile("[\"'\\[]+\\s*(" + YEAR_LOOSE + ")\\s*[\"'\\]]+")
-    NORM_IMPRINT_YEAR = re.compile("(" + YEAR_LOOSE + ")\\s*" +
-        "([(\\[,&]? *(?:not|imprint)? *\"?" + YEAR_LOOSE + "\"?[)\\]]?)")
+    NO_Q_MARKS = re.compile("([" + author_letters + r"])\?+")
+    NORM_PUNCTUATIONS = re.compile(r"\s*([.,;:&(){}\[\]-])\s*\1*\s*")
+    NORM_YEAR = re.compile(r"[\"'\[]+\s*(" + YEAR_LOOSE + r")\s*[\"'\]]+")
+    NORM_IMPRINT_YEAR = re.compile("(" + YEAR_LOOSE + r")\s*"
+        + r"([(\[,&]? *(?:not|imprint)? *\"?" + YEAR_LOOSE + r"\"?[)\]]?)")
     # √ó is an utf garbaged version of the hybrid cross found in IPNI. See http://dev.gbif.org/issues/browse/POR-3081
-    NORM_HYBRIDS_GENUS = re.compile("^\\s*(?:[+×xX]|√ó)\\s*([" + NAME_LETTERS + "])")
-    NORM_HYBRIDS_EPITH = re.compile("^\\s*(×?" + MONOMIAL + ")\\s+(?:×|√ó|[xX]\\s)\\s*(" + EPHITHET + ")")
-    NORM_HYBRIDS_FORM = re.compile("\\b([×xX]|√ó) ")
-    NORM_TF_GENUS = re.compile("^([" + NAME_LETTERS + "])\\(([" + name_letters + "-]+)\\)\\.? ")
-    REPL_IN_REF = re.compile("[, ]?\\b(?:in|IN|apud) (" + AUTHOR_TEAM + ")")
+    NORM_HYBRIDS_GENUS = re.compile(r"^\s*(?:[+×xX]|√ó)\s*([" + NAME_LETTERS + "])")
+    NORM_HYBRIDS_EPITH = re.compile(r"^\s*(×?" + MONOMIAL + r")\s+(?:×|√ó|[xX]\s)\s*(" + EPHITHET + ")")
+    NORM_HYBRIDS_FORM = re.compile(r"\b([×xX]|√ó) ")
+    NORM_TF_GENUS = re.compile("^([" + NAME_LETTERS + r"])\(([" + name_letters + r"-]+)\)\.? ")
+    REPL_IN_REF = re.compile(r"[, ]?\b(?:in|IN|apud) (" + AUTHOR_TEAM + ")")
     REPL_RANK_PREFIXES = re.compile("^(sub)?(fossil|"
-        + "|".join(rankutils.RANK_MARKER_MAP_SUPRAGENERIC.keys()) + ")\\.?\\s+", re.I)
-    MANUSCRIPT_NAMES = re.compile("\\b(indet|spp?)[. ](?:nov\\.)?[A-Z0-9][a-zA-Z0-9-]*(?:\\(.+?\\))?")
-    MANUSCRIPT_SUFFIX = re.compile("\\bms\\.?$")
-    REPL_AFF = re.compile("\\b(undet|indet|aff|cf)[?.]?\\b", re.I)
+        + "|".join(rankutils.RANK_MARKER_MAP_SUPRAGENERIC.keys()) + r")\.?\s+", re.I)
+    MANUSCRIPT_NAMES = re.compile(r"\b(indet|spp?)[. ](?:nov\.)?[A-Z0-9][a-zA-Z0-9-]*(?:\(.+?\))?")
+    MANUSCRIPT_SUFFIX = re.compile(r"\bms\\.?$")
+    REPL_AFF = re.compile(r"\b(undet|indet|aff|cf)[?.]?\b", re.I)
     NO_LETTERS = re.compile("^[^a-zA-Z]+$")
-    REMOVE_PLACEHOLDER_AUTHOR = re.compile("\\b"
-        + "(?:unknown|unspecified|uncertain|\\?)"
+    REMOVE_PLACEHOLDER_AUTHOR = re.compile(r"\b"
+        + r"(?:unknown|unspecified|uncertain|\?)"
         + "[, ] ?(" + YEAR_LOOSE + ")$", re.I
     )
-    PLACEHOLDER_GENUS = re.compile("^(In|Dummy|Missing|Temp|Unknown|Unplaced|Unspecified) (?=[a-z]+)\\b")
+    PLACEHOLDER_GENUS = re.compile(r"^(In|Dummy|Missing|Temp|Unknown|Unplaced|Unspecified) (?=[a-z]+)\b")
     PLACEHOLDER_NAME = "(?:allocation|awaiting|deleted?|dummy|incertae sedis|mixed|not assigned|not stated|place ?holder|temp|tobedeleted|unaccepted|unallocated|unassigned|uncertain|unclassed|unclassified|uncultured|undescribed|undetermined|unknown|unnamed|unplaced|unspecified)"
-    REMOVE_PLACEHOLDER_INFRAGENERIC = re.compile("\\b\\( ?" + PLACEHOLDER_NAME + " ?\\) ", re.I)
-    PLACEHOLDER = re.compile("\\b" + PLACEHOLDER_NAME + "\\b", re.I)
-    DOUBTFUL = re.compile("^[" + AUTHOR_LETTERS + author_letters + HYBRID_MARKER + "\":;&*+\\s,.()\\[\\]/'`´0-9-†]+$")
-    DOUBTFUL_NULL = re.compile("\\bnull\\b", re.I)
-    XML_ENTITY_STRIP = re.compile("&\\s*([a-z]+)\\s*;")
+    REMOVE_PLACEHOLDER_INFRAGENERIC = re.compile(r"\b\( ?" + PLACEHOLDER_NAME + r" ?\) ", re.I)
+    PLACEHOLDER = re.compile(r"\b" + PLACEHOLDER_NAME + r"\b", re.I)
+    DOUBTFUL = re.compile("^[" + AUTHOR_LETTERS + author_letters + HYBRID_MARKER + r"\":;&*+\s,.()\[\]/'`´0-9-†]+$")
+    DOUBTFUL_NULL = re.compile(r"\bnull\b", re.I)
+    XML_ENTITY_STRIP = re.compile(r"&\s*([a-z]+)\s*;")
     # matches badly formed amoersands which are important in names / authorships
     AMPERSAND_ENTITY = re.compile("& *amp +")
 
     XML_TAGS = re.compile("< */? *[a-zA-Z] *>")
-    STARTING_EPITHET = re.compile("^\\s*(" + EPHITHET + ")\\b")
-    FORM_SPECIALIS = re.compile("\\bf\\. *sp(?:ec)?\\b")
-    SENSU_LATU = re.compile("\\bs\\.l\\.\\b")
+    STARTING_EPITHET = re.compile(r"^\s*(" + EPHITHET + r")\b")
+    FORM_SPECIALIS = re.compile(r"\bf\. *sp(?:ec)?\b")
+    SENSU_LATU = re.compile(r"\bs\.l\.\b")
 
     # many names still use outdated xxxtype rank marker, e.g. serotype instead of serovar
-    TYPE_TO_VAR = re.compile("\\b(" + "|".join(r.name.lower()[:-2]  \
+    TYPE_TO_VAR = re.compile(r"\b(" + "|".join(r.name.lower()[:-2]
         for r in rankutils.INFRASUBSPECIFIC_MICROBIAL_RANKS) \
-            + ")type\\b")
-    POTENTIAL_NAME_PATTERN = re.compile("^×?" + MONOMIAL + "\\b")
-    REMOVE_INTER_RANKS = re.compile("\\b((?:subsp|ssp|var)[ .].+)\\b(" + RANK_MARKER + ")\\b")
+            + r")type\b")
+    POTENTIAL_NAME_PATTERN = re.compile("^×?" + MONOMIAL + r"\b")
+    REMOVE_INTER_RANKS = re.compile(r"\b((?:subsp|ssp|var)[ .].+)\b(" + RANK_MARKER + r")\b")
     # allow only short lower case tokens to avoid matching to a real epithet
-    SKIP_AUTHORS = "(?:\\b[ \\p{Ll}'(-]{0,3}\\p{Lu}.*?\\b)??";
+    SKIP_AUTHORS = r"(?:\b[ \p{Ll}'(-]{0,3}\p{Lu}.*?\b)??";
     NAME_PATTERN = re.compile(
                 "^"
                 # #1 genus/monomial
-                + "(×?(?:\\?|" + MONOMIAL + "))"
+                + r"(×?(?:\?|" + MONOMIAL + "))"
                 # #2 or #4 subgenus/section with #3 infrageneric rank marker
                 + "(?:(?<!ceae)" + INFRAGENERIC + ")?"
                 # #5 species
-                + "(?:(?:\\b| )(×?" + EPHITHET + ")"
+                + r"(?:(?:\b| )(×?" + EPHITHET + ")"
                     + "(?:"
                     # any superfluous intermediate bits before terminal epithets, e.g. species authors
                     + "(?:.*?)"
@@ -318,7 +319,7 @@ class TaxonParser:
                     # #7 infraspecies rank
                     + "[. ]?(" + RANK_MARKER + ")?"
                     # #8 infraspecies epitheton, avoid matching to degli which is part of Italian author names
-                    + "[. ](×?\"?(?!(?:degli|de[rn]?)\\b)" + EPHITHET + "\"?)"
+                    + r"[. ](×?\"?(?!(?:degli|de[rn]?)\b)" + EPHITHET + "\"?)"
                     + ")?"
                 + ")?"
 
@@ -326,7 +327,7 @@ class TaxonParser:
                 # #9 microbial rank
                 + "(" + RANK_MARKER_MICROBIAL + ")[ .]"
                 # #10 microbial infrasubspecific epithet
-                + "(\\S+)"
+                + r"(\S+)"
                 + ")?"
 
                 # #11 indet rank marker after epithets
@@ -334,21 +335,21 @@ class TaxonParser:
 
                 # #12 entire authorship incl basionyms and year
                 + "([., ]?"
-                + "(?:\\("
+                + r"(?:\("
                     # #13/14/15 basionym authorship (ex/auth/sanct)
                     + "(?:" + AUTHORSHIP + ")?"
                     # #16 basionym year
                     + "[, ]?(" + YEAR_LOOSE + ")?"
-                + "\\))?"
+                + r"\))?"
 
                 # #17/18/19 authorship (ex/auth/sanct)
                 + "(?:" + AUTHORSHIP + ")?"
                 # #20 year with or without brackets
-                + "(?: ?\\(?,?(" + YEAR_LOOSE + ")\\)?)?"
+                + r"(?: ?\(?,?(" + YEAR_LOOSE + r")\)?)?"
                 + ")"
 
                 # #21 any remainder
-                + "(\\b.*?)??$"
+                + r"(\b.*?)??$"
             )
 
 
@@ -721,7 +722,7 @@ class TaxonParser:
         
             :return The normalized name
         """
-        if (name is None):
+        if name is None:
             return
         
         # normalize ex hort. (for gardeners, often used as ex names) spelled in lower case
