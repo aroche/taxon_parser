@@ -1,4 +1,4 @@
-from ..util import nameformatter
+from .util import nameformatter
 
 
 """

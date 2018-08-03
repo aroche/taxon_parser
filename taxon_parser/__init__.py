@@ -4,10 +4,10 @@ import os
 from pkg_resources import resource_string
 from enum import Enum, auto
 
-from .name_parser_api.api.parsedname import ParsedName, State, NamePart
+from .name_parser_api.parsedname import ParsedName, State, NamePart
 from .name_parser_api.util import rankutils
-from .name_parser_api.api.rank import Rank, NomCode
-from .name_parser_api.api.authorship import Authorship
+from .name_parser_api.rank import Rank, NomCode
+from .name_parser_api.authorship import Authorship
 
 
 def stripToNone(s):
@@ -136,7 +136,7 @@ class TaxonParser:
     YEAR_LOOSE = YEAR + "[abcdh?]?(?:[/,-][0-9]{1,4})?"
 
     NOTHO = "notho"
-    RANK_MARKER = ("(?:"+NOTHO+")?(?:(?<!f[ .])sp|" +
+    RANK_MARKER = ("(?:" + NOTHO + ")?(?:(?<!f[ .])sp|" +
             "|".join(rankutils.RANK_MARKER_MAP_INFRASPECIFIC.keys()) +
         ")").replace("|hort|", "|hort(?!\\.ex)|") # avoid hort.ex matches
 
@@ -318,7 +318,7 @@ class TaxonParser:
                     # #7 infraspecies rank
                     + "[. ]?(" + RANK_MARKER + ")?"
                     # #8 infraspecies epitheton, avoid matching to degli which is part of Italian author names
-                    + "[. ](×?\"?(?!(?:degli|de)\\b)" + EPHITHET + "\"?)"
+                    + "[. ](×?\"?(?!(?:degli|de[rn]?)\\b)" + EPHITHET + "\"?)"
                     + ")?"
                 + ")?"
 

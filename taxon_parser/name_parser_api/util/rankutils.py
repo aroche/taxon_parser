@@ -1,6 +1,6 @@
 import regex as re
 from collections import OrderedDict
-from ..api.rank import Rank, NomCode
+from ..rank import Rank, NomCode
 
 
 

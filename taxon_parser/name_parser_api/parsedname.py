@@ -1,22 +1,14 @@
 from enum import Enum, auto
 from .authorship import Authorship
 from .rank import Rank, NomCode
-from ..util import nameformatter
+from .namepart import NamePart
+from .util import nameformatter
 
 
 class State(Enum):
     COMPLETE = auto()
     PARTIAL = auto()
     NONE = auto()
-    
-
-class NamePart(Enum):
-    """ Enumeration to indicate a part of a canonical scientific name. """
-    
-    GENERIC = auto()
-    INFRAGENERIC = auto()
-    SPECIFIC = auto()
-    INFRASPECIFIC = auto()
 
 
 class ParsedName:
