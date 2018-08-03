@@ -284,7 +284,7 @@ class TaxonParser:
     REMOVE_PLACEHOLDER_INFRAGENERIC = re.compile("\\b\\( ?" + PLACEHOLDER_NAME + " ?\\) ", re.I)
     PLACEHOLDER = re.compile("\\b" + PLACEHOLDER_NAME + "\\b", re.I)
     DOUBTFUL = re.compile("^[" + AUTHOR_LETTERS + author_letters + HYBRID_MARKER + "\":;&*+\\s,.()\\[\\]/'`´0-9-†]+$")
-    DOUBTFUL2 = re.compile("\\bnull\\b")
+    DOUBTFUL_NULL = re.compile("\\bnull\\b", re.I)
     XML_ENTITY_STRIP = re.compile("&\\s*([a-z]+)\\s*;")
     # matches badly formed amoersands which are important in names / authorships
     AMPERSAND_ENTITY = re.compile("& *amp +")
@@ -550,7 +550,6 @@ class TaxonParser:
             # use as rank unless we already have a cultivar
             self.ignoreAuthorship = True
             if self.pn.cultivarEpithet is None:
-                self.pn.type = NameType.INFORMAL
                 self.setRank(m.group(2))
             
             name = m.re.sub("", name)
@@ -871,7 +870,7 @@ class TaxonParser:
             self.pn.addWarning(Warnings.UNUSUAL_CHARACTERS)
 
         elif self.pn.type.isParsable():
-            m = self.DOUBTFUL2.search(scientificName)
+            m = self.DOUBTFUL_NULL.search(scientificName)
             if m:
                 self.pn.doubtful = True
                 self.pn.addWarning(Warnings.NULL_EPITHET)

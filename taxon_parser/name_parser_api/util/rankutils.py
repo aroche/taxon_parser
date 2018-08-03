@@ -57,6 +57,7 @@ RANK_MARKER_MAP_SPECIFIC = {
       "sl": Rank.SPECIES_AGGREGATE, # sensu lat
       "agg": Rank.SPECIES_AGGREGATE,
       "aggr": Rank.SPECIES_AGGREGATE,
+      "group": Rank.SPECIES_AGGREGATE,
       "sp": Rank.SPECIES,
       "spec": Rank.SPECIES,
       "species": Rank.SPECIES,
