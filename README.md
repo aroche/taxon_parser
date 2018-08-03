@@ -59,7 +59,7 @@ Infrageneric epithets:
 * ParsedName.**specificEpithet**
 * ParsedName.**infraspecificEpithet**
 * ParsedName.**cultivarEpithet**
-* ParsedName.strain**
+* ParsedName.**strain**
 
 * ParsedName.**candidatus**: A bacterial candidate name. Candidatus is a provisional status for incompletely described procaryotes
 (e.g. that cannot be maintained in a Bacteriology Culture Collection)
