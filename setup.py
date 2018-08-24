@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     
 setuptools.setup(
     name = "taxon_parser",
-    version = "0.2.0",
+    version = "0.2.1",
     author = "Augustin Roche",
     author_email = "aroche@photoherbarium.fr",
     description = "A library to parse taxon names into elementary components",
