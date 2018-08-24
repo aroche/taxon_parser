@@ -1,6 +1,6 @@
 from . import unicodeutils
-
 from ..namepart import NamePart
+from ..rank import Rank, NomCode
 
 
 HYBRID_MARKER = '×'
@@ -40,7 +40,7 @@ def canonicalMinimal(n):
             Abies alba alpina
             Bracteata
     """
-    return buildName(n,False, False, False, False, False, True, True, False, False, False, False, False, False)
+    return buildName(n, False, False, False, False, False, True, True, False, False, False, False, False, False)
 
 
 
@@ -48,7 +48,7 @@ def canonicalComplete(n):
     """
         Assembles a full name with all details including non code compliant, informal remarks.
     """
-    return buildName(n,True, True, True, True, True, True, False, True, True, True, True, True, True)
+    return buildName(n, True, True, True, True, True, True, False, True, True, True, True, True, True)
 
 
 def authorshipComplete(n):
@@ -95,8 +95,8 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
 
     if n.uninomial is not None:
         # higher rank names being just a uninomial!
-        if hybridMarker and NamePart.GENERIC == n.getNotho():
-            sb += HYBRID_MARKER  + " "
+        if hybridMarker and NamePart.GENERIC == n.notho:
+            sb += HYBRID_MARKER + " "
     
         sb += n.uninomial
 
@@ -123,8 +123,8 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
                         # If we know the rank we use explicit rank markers
                         # this is how botanical infrageneric names are formed, see http://www.iapt-taxon.org/nomen/main.php?page=art21
                         s = appendRankMarker(n.rank, hybridMarker and NamePart.INFRAGENERIC == n.notho)
-                    if s:
-                        sb += s + ' '
+                        if s:
+                            sb += s + ' '
                     
                     sb += n.infragenericEpithet
 
@@ -132,7 +132,7 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
                 if n.genus is not None:
                     sb += appendGenus(n, hybridMarker)
                 
-                if (infrageneric):
+                if infrageneric:
                     # additional subgenus shown for binomial. Always shown in brackets
                     sb += " (" + n.infragenericEpithet + ")"  
         
@@ -144,12 +144,12 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
                 if Rank.SPECIES == n.rank:
                     # no species epithet given, but rank=species. Indetermined species!
                     sb += " spec."
-                    authorship = False;
+                    authorship = False
 
                 elif n.rank is not None and n.rank.isInfraspecific():
                     # no species epithet given, but rank below species. Indetermined!
                     sb += appendInfraspecific(n, hybridMarker, rankMarker, True)
-                    authorship = False;
+                    authorship = False
         
         else:
             # species part
@@ -166,8 +166,8 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
                     and n.rank.isInfraspecific() \
                     and (NomCode.CULTIVARS != n.rank.isRestrictedToCode() or n.cultivarEpithet is None):
                     # no infraspecific epitheton given, but rank below species. Indetermined!
-                    sb += ' '  + n.rank.marker
-                    authorship = False;
+                    sb += ' ' + n.rank.marker
+                    authorship = False
         
 
             else:
@@ -175,7 +175,7 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
                 sb += appendInfraspecific(n, hybridMarker, rankMarker, False)
                 # non autonym authorship ?
                 if n.isAutonym():
-                    authorship = False;
+                    authorship = False
 
     # closing quotes for Candidatus names
     if n.isCandidatus():
@@ -201,13 +201,13 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
             sb += " '" + n.cultivarEpithet + "'"    
 
     # add sensu/sec reference
-    if (showSensu and n.getTaxonomicNote() is not None):
+    if showSensu and n.getTaxonomicNote() is not None:
         if sb != '':
             sb += " "
         sb += n.taxonomicNote   
 
     # add nom status
-    if (nomNote and n.nomenclaturalNotes is not None):
+    if nomNote and n.nomenclaturalNotes is not None:
         if sb != '':
             sb += ', '
         sb += n.nomenclaturalNotes
@@ -220,10 +220,10 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
 
     # final char transformations
     name = sb.strip()
-    if (decomposition):
+    if decomposition:
         name = unicodeutils.decompose(name)
     
-    if (asciiOnly):
+    if asciiOnly:
         name = unicodeutils.ascii(name)
     
     if name == '':
@@ -247,7 +247,7 @@ def appendInfraspecific(n, hybridMarker, rankMarker, forceRankMarker):
         if s and n.infraspecificEpithet is not None:
             sb += ' '
     
-    if (n.infraspecificEpithet is not None):
+    if n.infraspecificEpithet is not None:
         sb += n.infraspecificEpithet
     
     return sb
@@ -273,7 +273,7 @@ def appendRankMarker(rank, nothoPrefix):
     """
         :return True if rank marker was added
     """
-    return appendRankMarker(rank, null, nothoPrefix)
+    return appendRankMarker(rank, None, nothoPrefix)
 
 
 def appendRankMarker(rank, ifRank, nothoPrefix):
@@ -282,13 +282,13 @@ def appendRankMarker(rank, ifRank, nothoPrefix):
     """
     sb = ''
     if rank is not None and rank.marker is not None and (ifRank is None or ifRank.test(rank)):
-        if (nothoPrefix):
+        if nothoPrefix:
             sb += NOTHO_PREFIX
     
         sb += rank.marker
         return sb
     
-    return False;
+    return False
 
 
 def appendGenus(n, hybridMarker):
@@ -304,7 +304,7 @@ def joinAuthors(authors, useEtAl=True):
     if useEtAl and len(authors) > 2:
         return AUTHORSHIP_JOINER.join(authors[:2]) + " et al."
 
-    elif (len(authors) > 1):
+    elif len(authors) > 1:
         return AUTHORSHIP_JOINER.join(authors[:-1]) + " & " + authors[-1]
     else:
         return AUTHORSHIP_JOINER.join(authors)

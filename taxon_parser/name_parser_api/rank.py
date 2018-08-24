@@ -300,10 +300,9 @@ class Rank(Enum):
         'FORMA_SPECIALIS': NomCode.BACTERIAL,
         }
 
-
-    #def __init__(self, marker=None):
-        #super().__init__()
-        #self.marker = marker
+    def __init__(self, *args, marker=None):
+        super().__init__()
+        self.marker = marker
         
     def ordinal(self):
         " Convenient method to get the order of the member "
