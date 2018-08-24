@@ -11,7 +11,7 @@ NORMALIZE_RANK_MARKER = re.compile(r"(?:[._ -]+|\bnotho)")
 def buildRankMarkerMap(ranks, additions=None):
     map_ = {}
     for r in ranks:
-        map_[r.name.replace(".", "")] = r
+        map_[r.value.replace(".", "")] = r
     if additions is not None:
         for k, v in additions.items():
             map_[k] = v

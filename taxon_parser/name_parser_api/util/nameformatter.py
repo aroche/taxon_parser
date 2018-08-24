@@ -166,7 +166,7 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
                     and n.rank.isInfraspecific() \
                     and (NomCode.CULTIVARS != n.rank.isRestrictedToCode() or n.cultivarEpithet is None):
                     # no infraspecific epitheton given, but rank below species. Indetermined!
-                    sb += ' ' + n.rank.marker
+                    sb += ' ' + n.rank.value
                     authorship = False
         
 
@@ -187,7 +187,7 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
 
     # add strain name
     if showStrain and n.strain is not None:
-        sb += " "  + n.strain    
+        sb += " " + n.strain
 
     # add cultivar name
     if showCultivar and n.cultivarEpithet is not None:
@@ -245,7 +245,7 @@ def appendInfraspecific(n, hybridMarker, rankMarker, forceRankMarker):
     if forceRankMarker or rankMarker and (not isZoo(n.code) or Rank.SUBSPECIES != n.rank):
         s = appendRankMarker(n.rank, isInfraspecificMarker, False)
         if s and n.infraspecificEpithet is not None:
-            sb += ' '
+            sb += s + ' '
     
     if n.infraspecificEpithet is not None:
         sb += n.infraspecificEpithet
@@ -281,11 +281,11 @@ def appendRankMarker(rank, ifRank, nothoPrefix):
         :return True if rank marker was added
     """
     sb = ''
-    if rank is not None and rank.marker is not None and (ifRank is None or ifRank.test(rank)):
+    if rank is not None and (ifRank is None or ifRank(rank)):
         if nothoPrefix:
             sb += NOTHO_PREFIX
     
-        sb += rank.marker
+        sb += rank.value
         return sb
     
     return False

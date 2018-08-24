@@ -209,100 +209,104 @@ class Rank(Enum):
     STRAIN = "strain"
 
     # Any other rank we cannot map to this enumeration
-    OTHER = 0
+    OTHER = "other"
 
     # Rank used for unknown or explicitly not assigned rank.
     # The default if not given instead of null.
-    UNRANKED = 1
+    UNRANKED = "unranked"
 
-    # All main Linnean ranks ordered.
-    LINNEAN_RANKS = (
-        KINGDOM,
-        PHYLUM,
-        CLASS,
-        ORDER,
-        FAMILY,
-        GENUS,
-        SPECIES
-    )
+    @classmethod
+    def LINNEAN_RANKS(cls):
+        """ All main Linnean ranks ordered. """
+        return (
+            cls.KINGDOM,
+            cls.PHYLUM,
+            cls.CLASS,
+            cls.ORDER,
+            cls.FAMILY,
+            cls.GENUS,
+            cls.SPECIES
+        )
 
-    
-    # An ordered list of all ranks that appear in Darwin Core with their own term.
-    DWC_RANKS = (
-        KINGDOM,
-        PHYLUM,
-        CLASS,
-        ORDER,
-        FAMILY,
-        GENUS,
-        SUBGENUS,
-        SPECIES
-    )
+    @classmethod
+    def DWC_RANKS(cls):
+        """An ordered list of all ranks that appear in Darwin Core with their own term."""
+        return (
+            cls.KINGDOM,
+            cls.PHYLUM,
+            cls.CLASS,
+            cls.ORDER,
+            cls.FAMILY,
+            cls.GENUS,
+            cls.SUBGENUS,
+            cls.SPECIES
+        )
 
-    
-    # A set of ranks which cannot clearly be compared to any other rank as they represent rank "ranges".
-    # For example a subgeneric rank is anything below genus,
-    # so one cannot say if its higher or lower than a species for example.
-    UNCOMPARABLE_RANKS = {
-        SUPRAGENERIC_NAME,
-        INFRAGENERIC_NAME,
-        INFRASPECIFIC_NAME,
-        INFRASUBSPECIFIC_NAME,
-        OTHER,
-        UNRANKED
-    }
-
-    LEGACY_RANKS = {
-        MORPH,
-        ABERRATION,
-        NATIO,
-        PROLES,
-        CONVARIETY
-    }
-
-    RANK2CODE = {
-        'PARVCLASS': NomCode.ZOOLOGICAL,
-        'MAGNORDER': NomCode.ZOOLOGICAL,
-        'GRANDORDER': NomCode.ZOOLOGICAL,
-        'PARVORDER': NomCode.ZOOLOGICAL,
-        'SUPERLEGION': NomCode.ZOOLOGICAL,
-        'LEGION': NomCode.ZOOLOGICAL,
-        'SUBLEGION': NomCode.ZOOLOGICAL,
-        'INFRALEGION': NomCode.ZOOLOGICAL,
-        'SUPERCOHORT': NomCode.ZOOLOGICAL,
-        'COHORT': NomCode.ZOOLOGICAL,
-        'SUBCOHORT': NomCode.ZOOLOGICAL,
-        'INFRACOHORT': NomCode.ZOOLOGICAL,
-        'MORPH': NomCode.ZOOLOGICAL,
-        'ABERRATION': NomCode.ZOOLOGICAL,
-        'NATIO': NomCode.ZOOLOGICAL,
-        
-        'PROLES': NomCode.BOTANICAL,
-        'SUPERSECTION': NomCode.BOTANICAL,
-        'SECTION': NomCode.BOTANICAL,
-        'SUBSECTION': NomCode.BOTANICAL,
-        'SUPERSERIES': NomCode.BOTANICAL,
-        'SERIES': NomCode.BOTANICAL,
-        'SUBSERIES': NomCode.BOTANICAL,
-
-        'CULTIVAR': NomCode.CULTIVARS,
-        'CULTIVAR_GROUP': NomCode.CULTIVARS,
-        'CONVARIETY': NomCode.CULTIVARS,
-        'GREX': NomCode.CULTIVARS,
-
-        'PATHOVAR': NomCode.BACTERIAL,
-        'BIOVAR': NomCode.BACTERIAL,
-        'CHEMOVAR': NomCode.BACTERIAL,
-        'MORPHOVAR': NomCode.BACTERIAL,
-        'PHAGOVAR': NomCode.BACTERIAL,
-        'SEROVAR': NomCode.BACTERIAL,
-        'CHEMOFORM': NomCode.BACTERIAL,
-        'FORMA_SPECIALIS': NomCode.BACTERIAL,
+    @classmethod
+    def UNCOMPARABLE_RANKS(cls):
+        """ A set of ranks which cannot clearly be compared to any other rank as they represent rank "ranges".
+        For example a subgeneric rank is anything below genus,
+        so one cannot say if its higher or lower than a species for example. """
+        return {
+            cls.SUPRAGENERIC_NAME,
+            cls.INFRAGENERIC_NAME,
+            cls.INFRASPECIFIC_NAME,
+            cls.INFRASUBSPECIFIC_NAME,
+            cls.OTHER,
+            cls.UNRANKED
         }
 
-    def __init__(self, *args, marker=None):
-        super().__init__()
-        self.marker = marker
+    @classmethod
+    def LEGACY_RANKS(cls):
+        return {
+            cls.MORPH,
+            cls.ABERRATION,
+            cls.NATIO,
+            cls.PROLES,
+            cls.CONVARIETY
+        }
+
+    @classmethod
+    def RANK2CODE(cls):
+        return {
+            'PARVCLASS': NomCode.ZOOLOGICAL,
+            'MAGNORDER': NomCode.ZOOLOGICAL,
+            'GRANDORDER': NomCode.ZOOLOGICAL,
+            'PARVORDER': NomCode.ZOOLOGICAL,
+            'SUPERLEGION': NomCode.ZOOLOGICAL,
+            'LEGION': NomCode.ZOOLOGICAL,
+            'SUBLEGION': NomCode.ZOOLOGICAL,
+            'INFRALEGION': NomCode.ZOOLOGICAL,
+            'SUPERCOHORT': NomCode.ZOOLOGICAL,
+            'COHORT': NomCode.ZOOLOGICAL,
+            'SUBCOHORT': NomCode.ZOOLOGICAL,
+            'INFRACOHORT': NomCode.ZOOLOGICAL,
+            'MORPH': NomCode.ZOOLOGICAL,
+            'ABERRATION': NomCode.ZOOLOGICAL,
+            'NATIO': NomCode.ZOOLOGICAL,
+
+            'PROLES': NomCode.BOTANICAL,
+            'SUPERSECTION': NomCode.BOTANICAL,
+            'SECTION': NomCode.BOTANICAL,
+            'SUBSECTION': NomCode.BOTANICAL,
+            'SUPERSERIES': NomCode.BOTANICAL,
+            'SERIES': NomCode.BOTANICAL,
+            'SUBSERIES': NomCode.BOTANICAL,
+
+            'CULTIVAR': NomCode.CULTIVARS,
+            'CULTIVAR_GROUP': NomCode.CULTIVARS,
+            'CONVARIETY': NomCode.CULTIVARS,
+            'GREX': NomCode.CULTIVARS,
+
+            'PATHOVAR': NomCode.BACTERIAL,
+            'BIOVAR': NomCode.BACTERIAL,
+            'CHEMOVAR': NomCode.BACTERIAL,
+            'MORPHOVAR': NomCode.BACTERIAL,
+            'PHAGOVAR': NomCode.BACTERIAL,
+            'SEROVAR': NomCode.BACTERIAL,
+            'CHEMOFORM': NomCode.BACTERIAL,
+            'FORMA_SPECIALIS': NomCode.BACTERIAL,
+        }
         
     def ordinal(self):
         " Convenient method to get the order of the member "
@@ -362,15 +366,15 @@ class Rank(Enum):
     # Example ranks are INFRASPECIFIC_NAME or INFRAGENERIC_NAME
     # @return true if uncomparable
     def isUncomparable(self):
-        return self in self.UNCOMPARABLE_RANKS.value
+        return self in self.UNCOMPARABLE_RANKS()
     
     # @return true if the rank is considered a legacy rank not used anymore in current nomenclature.
     def isLegacy(self):
-        return self in self.LEGACY_RANKS
+        return self in self.LEGACY_RANKS()
    
     # @return the nomenclatural code if the rank is restricted to just one code or null otherwise
     def isRestrictedToCode(self):
-        return self.RANK2CODE.value.get(self.name)
+        return self.RANK2CODE().get(self.name)
     
     # @return true if the rank is restricted to Cultivated Plants
     def isCultivarRank(self):

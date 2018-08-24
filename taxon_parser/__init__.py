@@ -609,7 +609,7 @@ class TaxonParser:
             self.pn.infraspecificEpithet = infraspecEpithet
 
         # if we established a rank during preparsing make sure we use this not the parsed one
-        if preparsingRank is not None and self.rank != preparsingRank:
+        if preparsingRank is not None and preparsingRank != Rank.UNRANKED and self.rank != preparsingRank:
             self.pn.rank = preparsingRank
         
         # determine name type
@@ -965,7 +965,7 @@ class TaxonParser:
                 self.ignoreAuthorship = True
 
             # #12 is entire authorship, not stored in ParsedName
-            if not self.ignoreAuthorship and matcher.group(12) is not None:
+            if not self.ignoreAuthorship and stripToNone(matcher.group(12)) is not None:
                 # #17/18/19/20 authorship (ex/auth/sanct/year)
                 self.pn.combinationAuthorship = self.parseAuthorship(matcher.group(17), matcher.group(18), matcher.group(20))
                 # sanctioning author
@@ -1025,7 +1025,7 @@ class TaxonParser:
         if self.pn.rank.isUncomparable():
             if (self.pn.rank == Rank.INFRAGENERIC_NAME and not rank.isInfragenericStrictly()) \
                     or (self.pn.rank == Rank.INFRASPECIFIC_NAME and not rank.isInfraspecific()) \
-                    or (self.pn.rank == Rank.INFRASSUBSPECIFIC_NAME and not rank.isInfrasubspecific()):
+                    or (self.pn.rank == Rank.INFRASUBSPECIFIC_NAME and not rank.isInfrasubspecific()):
                 return
             self.pn.rank = rank
 
