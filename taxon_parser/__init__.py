@@ -896,9 +896,9 @@ class TaxonParser:
             elif self.pn.isCandidatus() or self.pn.strain is not None:
                 self.pn.code = NomCode.BACTERIAL
 
-            elif self.pn.basionymAuthorship.year is not None or self.pn.combinationAuthorship.year is not None:
+            # elif self.pn.basionymAuthorship.year is not None or self.pn.combinationAuthorship.year is not None:
                 # if years are given its a zoological name
-                self.pn.code = NomCode.ZOOLOGICAL
+            #   self.pn.code = NomCode.ZOOLOGICAL
 
             elif not self.pn.basionymAuthorship.isEmpty():
                 if self.pn.combinationAuthorship.isEmpty():
@@ -910,8 +910,6 @@ class TaxonParser:
                     self.pn.code = NomCode.BOTANICAL
             elif self.pn.nomenclaturalNotes is not None and "illeg" in self.pn.nomenclaturalNotes:
                 self.pn.code = NomCode.BOTANICAL
-
-
    
     def parseNormalisedName(self, name):
         """
