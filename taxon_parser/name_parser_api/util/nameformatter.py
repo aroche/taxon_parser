@@ -243,7 +243,7 @@ def appendInfraspecific(n, hybridMarker, rankMarker, forceRankMarker):
     
     # hide subsp. from zoological names
     if forceRankMarker or rankMarker and (not isZoo(n.code) or Rank.SUBSPECIES != n.rank):
-        s = appendRankMarker(n.rank, isInfraspecificMarker, False)
+        s = appendRankMarker(n.rank, False,  isInfraspecificMarker)
         if s and n.infraspecificEpithet is not None:
             sb += s + ' '
     
@@ -269,14 +269,7 @@ def isInfraspecificMarker(r):
     return r.isInfraspecific() and not r.isUncomparable()
 
 
-def appendRankMarker(rank, nothoPrefix):
-    """
-        :return True if rank marker was added
-    """
-    return appendRankMarker(rank, None, nothoPrefix)
-
-
-def appendRankMarker(rank, ifRank, nothoPrefix):
+def appendRankMarker(rank, nothoPrefix, ifRank=None):
     """
         :return True if rank marker was added
     """
