@@ -242,8 +242,6 @@ class ParsedName:
         return self.candidatus
 
     def __eq__(self, o):
-        if self == o:
-            return True
         if o is None or self.__class__ != o.__class__:
             return False
         return self.candidatus == o.candidatus and \

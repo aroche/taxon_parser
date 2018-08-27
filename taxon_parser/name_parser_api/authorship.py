@@ -54,8 +54,6 @@ class Authorship:
         return (len(self.authors) > 0) or (self.year is not None)
     
     def __eq__(self, obj):
-        if self == obj:
-            return True
         if obj is None or self.__class__ != obj.__class__:
             return False
         return self.authors == obj.authors and self.exAuthors == obj.exAuthors and self.year == obj.year
