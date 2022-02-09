@@ -330,7 +330,7 @@ def appendAuthorshipFromAuthor(auth, includeYear):
 def appendAuthorshipFromParsedName(n):
     sb = ''
     if n.basionymAuthorship.exists():
-        sb += "(" + appendAuthorshipFromAuthor(n.basionymAuthorship, True) + ")"
+        sb += "(" + appendAuthorshipFromAuthor(n.basionymAuthorship, True) + ") "
     
     if n.combinationAuthorship.exists():
         sb += appendAuthorshipFromAuthor(n.combinationAuthorship, True)
