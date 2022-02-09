@@ -201,7 +201,7 @@ def buildName(n, hybridMarker, rankMarker, authorship, genusForinfrageneric, inf
             sb += " '" + n.cultivarEpithet + "'"    
 
     # add sensu/sec reference
-    if showSensu and n.getTaxonomicNote() is not None:
+    if showSensu and n.taxonomicNote is not None:
         if sb != '':
             sb += " "
         sb += n.taxonomicNote   
