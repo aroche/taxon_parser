@@ -11,7 +11,7 @@ def ascii(x):
         return
         
     x = x.translate(str.maketrans("øØðÐ", "oOdD"))
-    return ''.join(c for c in unicodedata.normalize('NFD', s)
+    return ''.join(c for c in unicodedata.normalize('NFD', x)
                   if unicodedata.category(c) != 'Mn')
 
 transtable = str.maketrans({
